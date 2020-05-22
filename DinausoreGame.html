@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공룡 게임</title>
+    <style>
+        .back{
+            padding: 40px;
+        }
+        .dns{
+            height:100px;
+            position: absolute;
+            top: 400px;
+            transition: 0.3s;
+        }
+    </style>
+
+    <script>
+
+        function init(){
+            
+            var intervalID = null;
+            //스페이스바 누르면 점프
+            document.onkeydown=function(e){  
+
+                const DNS = document.querySelector(".dns");
+                if(e.which == 32 && window.getComputedStyle(DNS).top == "400px"){ //바닥에 있을 떄만 점프
+                    
+                    if(intervalID != null){
+                        clearInterval(intervalID);
+                    }
+                    
+                    document.getElementById("DNS").src="./image/DNS_3.png";
+                    DNS.style.top="200px";
+
+                    setTimeout(function(){
+                        DNS.style.top="400px";
+                        intervalID = move();
+                    },300);
+                }  
+            }  
+        }
+
+        function move(){
+            var pos = 0;
+            var DNSArr = ["./image/DNS_1.png","./image/DNS_2.png"];
+            var intervalID = setInterval(function(){
+                document.getElementById("DNS").src=DNSArr[pos];
+                pos == 0?pos=1:pos=0;
+            },2)
+
+            return intervalID;
+        }
+
+        window.onload = function(){
+            init();
+        }
+
+    </script>
+</head>
+<body>
+    <div class="back">
+        <img id="DNS" class="dns" src="./image/DNS_3.png">
+    </div>
+</body>
+</html>
