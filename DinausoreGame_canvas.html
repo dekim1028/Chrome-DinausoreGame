@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>공룡 게임</title>
+
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0px;
+        }
+
+        canvas {
+            background-color: #ffffff;
+        }
+    </style>
+
+</head>
+
+
+
+<body>
+    <canvas id="canvas" width="1600" height="770"></canvas>
+</body>
+
+<script>
+
+    var canvas;
+    var canvasCtx;
+
+    var canvasBuffer;
+    var bufferCtx;
+
+    var playerUnit = {}; //공룡 위치
+    var threadSpeed = 10;     //Gap of Thread
+    var dinausoreImg;
+    
+    var gameLoopThread;  //draw view Thread ID
+    var walkLoopThread = null; //walk Thread ID
+
+    window.onload = function(){
+        init();
+    }
+
+    function init() {
+
+        canvas = document.getElementById("canvas");
+        canvasCtx = canvas.getContext("2d");
+        canvasBuffer = document.createElement("canvas");
+        canvasBuffer.width = canvas.width;
+        canvasBuffer.height = canvas.height;
+        bufferCtx = canvasBuffer.getContext("2d");
+
+        // 공룡 시작 위치
+        playerUnit = {
+            x: 100, y: 400
+        };
+
+        document.onkeydown=getKeyDown;
+
+        setImage();
+
+        gameLoopThread = setInterval(gameLoop, threadSpeed);
+
+    }
+
+
+    function setImage() {
+        dinausoreImg = new Image();
+        dinausoreImg.src = "./image/DNS_3.png";
+    }
+
+
+
+    function getKeyDown(e) {
+
+        if(walkLoopThread != null){
+            clearInterval(walkLoopThread);
+        }
+
+        if(e.which == 32 && playerUnit.y == "400"){ //바닥에 있을 떄만 점프
+            dinausoreImg.src="./image/DNS_3.png";
+            playerUnit.y-=200;
+
+            setTimeout(function(){
+                playerUnit.y+=200;
+                walkLoopThread = move();
+            },250);
+        }  
+    }
+
+    function gameLoop() {
+        displayAll();
+    }
+
+    function move(){
+            var pos = 0;
+            var DNSArr = ["./image/DNS_1.png","./image/DNS_2.png"];
+            var intervalID = setInterval(function(){
+                dinausoreImg.src=DNSArr[pos];
+                pos == 0?pos=1:pos=0;
+            },100)
+
+            return intervalID;
+    }
+
+
+    function displayAll() {
+
+        bufferCtx.fillStyle = "#ffffff";
+        bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
+        bufferCtx.drawImage(dinausoreImg, playerUnit.x, playerUnit.y , 130, 130);
+
+        canvasCtx.drawImage(canvasBuffer, 0, 0);
+
+    }
+
+</script>
