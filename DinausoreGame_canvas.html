@@ -71,15 +71,13 @@
         dinausoreImg.src = "./image/DNS_3.png";
     }
 
-
-
     function getKeyDown(e) {
 
-        if(walkLoopThread != null){
-            clearInterval(walkLoopThread);
-        }
-
         if(e.which == 32 && playerUnit.y == "400"){ //바닥에 있을 떄만 점프
+            if(walkLoopThread != null){
+                clearInterval(walkLoopThread);
+            }
+
             dinausoreImg.src="./image/DNS_3.png";
             playerUnit.y-=200;
 
