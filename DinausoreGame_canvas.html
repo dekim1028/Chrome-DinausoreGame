@@ -26,18 +26,18 @@
 
 <script>
 
-    var canvas;
-    var canvasCtx;
+    let canvas;
+    let canvasCtx;
 
-    var canvasBuffer;
-    var bufferCtx;
+    let canvasBuffer;
+    let bufferCtx;
 
-    var playerUnit = {}; //공룡 위치
-    var threadSpeed = 10;     //Gap of Thread
-    var dinausoreImg;
+    const playerUnit = {x: 100, y: 400}; // 공룡 시작 위치
+    const threadSpeed = 10;     //Gap of Thread
+    let dinausoreImg;
     
-    var gameLoopThread;  //draw view Thread ID
-    var walkLoopThread = null; //walk Thread ID
+    let gameLoopThread;  //draw view Thread ID
+    let walkLoopThread = null; //walk Thread ID
 
     window.onload = function(){
         init();
@@ -51,11 +51,6 @@
         canvasBuffer.width = canvas.width;
         canvasBuffer.height = canvas.height;
         bufferCtx = canvasBuffer.getContext("2d");
-
-        // 공룡 시작 위치
-        playerUnit = {
-            x: 100, y: 400
-        };
 
         document.onkeydown=getKeyDown;
 
@@ -93,9 +88,9 @@
     }
 
     function move(){
-            var pos = 0;
-            var DNSArr = ["./image/DNS_1.png","./image/DNS_2.png"];
-            var intervalID = setInterval(function(){
+            let pos = 0;
+            const DNSArr = ["./image/DNS_1.png","./image/DNS_2.png"];
+            let intervalID = setInterval(function(){
                 dinausoreImg.src=DNSArr[pos];
                 pos == 0?pos=1:pos=0;
             },100)
