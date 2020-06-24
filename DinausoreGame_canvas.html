@@ -32,7 +32,7 @@
     let canvasBuffer;
     let bufferCtx;
 
-    const playerUnit = {x: 100, y: 400}; // 공룡 시작 위치
+    const playerUnit = {x: 300, y: 400}; // 공룡 시작 위치
     const threadSpeed = 10;     //Gap of Thread
     let dinausoreImg;
     
@@ -74,12 +74,26 @@
             }
 
             dinausoreImg.src="./image/DNS_3.png";
-            playerUnit.y-=200;
+
+            var timer = setInterval(function(){
+                if(playerUnit.y>150){
+                    playerUnit.y-=10;
+                }else{
+                    clearInterval(timer);
+                }
+            },10);
 
             setTimeout(function(){
-                playerUnit.y+=200;
-                walkLoopThread = move();
-            },250);
+                timer = setInterval(function(){
+                    if(playerUnit.y<400){
+                        playerUnit.y+=10;
+                    }else{
+                        clearInterval(timer);
+                    }
+                },10);
+            },400);
+            
+
         }  
     }
 
@@ -93,11 +107,10 @@
             let intervalID = setInterval(function(){
                 dinausoreImg.src=DNSArr[pos];
                 pos == 0?pos=1:pos=0;
-            },100)
+            },100);
 
             return intervalID;
     }
-
 
     function displayAll() {
 
@@ -105,8 +118,32 @@
         bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
         bufferCtx.drawImage(dinausoreImg, playerUnit.x, playerUnit.y , 130, 130);
 
-        canvasCtx.drawImage(canvasBuffer, 0, 0);
+        setInterval(displayHurdle(),800);
 
+        canvasCtx.drawImage(canvasBuffer, 0, 0);
+    }
+
+    let hurdleImgStack = [];
+    function displayHurdle(){
+        if(hurdleImgStack.length==0){
+            let hurdleImg = new Image();
+            const random = parseInt(Math.random() * 3 + 1);
+            imgSrc = `./image/hurdle_${random}.png`;
+            hurdleImg.src = imgSrc;
+            hurdleImgStack.push({"hurdleImg":hurdleImg, "x": 1500, "y": 450, "imgX":30*random, "imgY":80});
+        }
+
+        const loop = hurdleImgStack.length;
+        for(var i=0;i<loop;i++){
+            if(hurdleImgStack[i].x==0){
+                hurdleImgStack.shift();
+                continue;
+            }
+            hurdleImgStack[i].x -= 6;
+            bufferCtx.drawImage(hurdleImgStack[i].hurdleImg, hurdleImgStack[i].x, hurdleImgStack[i].y, hurdleImgStack[i].imgX,hurdleImgStack[i].imgY);
+        }
+
+       
     }
 
 </script>
