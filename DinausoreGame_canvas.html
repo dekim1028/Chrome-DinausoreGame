@@ -14,6 +14,13 @@
         canvas {
             background-color: #ffffff;
         } 
+
+        .score{
+            color: #ffffff;
+            text-align:right;
+            margin: 15px 82px 15px 0px;
+            font-size: 20px;
+        }
     </style>
 
 </head>
@@ -21,6 +28,7 @@
 
 
 <body>
+    <div class="score"><span>SCORE : </span><span id="score"></span></div>
     <canvas id="canvas" width="1600" height="770"></canvas>
 </body>
 
@@ -50,11 +58,13 @@
     */
     let gameLoopThread;  //draw view Thread ID
     let walkLoopThread = null; //walk Thread ID
+    let scoreThread; //score Thread ID
 
     /*
         게임 진행 관련 변수
     */
     let startGame =  false;
+    let score = 0;
 
     window.onload = function(){
         init();
@@ -74,7 +84,6 @@
         setImage();
 
         gameLoopThread = setInterval(gameLoop, 10);
-
     }
 
     function setImage() {
@@ -92,6 +101,7 @@
                 clearInterval(walkLoopThread);
             }else{
                 startGame = true;
+                scoreThread = setInterval(showScore,100);
             }
 
             dinausoreImg.src="./image/DNS_3.png";
@@ -173,24 +183,33 @@
         }
     }
 
+    // 점수 표시
+    function showScore(){
+        score += 1;
+        document.getElementById("score").innerText = score;
+    }
+
     // 게임오버 조건 체크 - 장애물에 부딫혔는지
     function checkHitPlayer(){
         let rtnVal = false;
-        const distanceX = (playerUnit.x +  130/2) - hurdleImgStack[0].x;
-        const distanceY = (playerUnit.y +  130/2) - hurdleImgStack[0].y;
-        const distance = distanceX*distanceX + distanceY*distanceY;
 
-        if(distance <= 360){
-            rtnVal = true;
-        }
+        if(hurdleImgStack.length>0){
+            const distanceX = (playerUnit.x +  130/2) - hurdleImgStack[0].x;
+            const distanceY = (playerUnit.y +  130/2) - hurdleImgStack[0].y;
+            const distance = distanceX*distanceX + distanceY*distanceY;
+
+            if(distance <= 360){
+                rtnVal = true;
+            }
+        } 
 
         return rtnVal;
-
     }
 
     // 게임오버시
     function stopGame(){
         clearInterval(gameLoopThread);
+        clearInterval(scoreThread);
     }
 
 </script>
